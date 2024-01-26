@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Portfolio Feedback Survey</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+
+  <body>
+    <header>
+      <h1 id="title">GitHub Portfolio Feedback Survey</h1>
+    </header>
+
+    <main>
+      <p id="description">Share your insights to help enhance my GitHub portfolio – your feedback on language proficiency, areas for improvement, and overall quality is invaluable!</p>
+
+      <form id="survey-form">
+        <label id="name-label" for="name">Full Name
+          <input id="name" type="text" placeholder="John Doe" required/>
+        </label>
+
+        <label id="email-label" for="email">Email
+          <input id="email" type="email" placeholder="johndoe@example.com" required/>
+        </label>
+
+        <label id="number-label" for="number">Age
+          <input id="number" type="number" min="13" max="120" placeholder="25"/>
+        </label>
+
+        <label id="dropdown-label" for="dropdown">How would you rate the clarity and organization of the project descriptions in my GitHub portfolio?
+          <select id="dropdown">
+            <option value="">Select one.</option>
+            <option value="1">Poor</option>
+            <option value="2">Below Average</option>
+            <option value="3">Average</option>
+            <option value="4">Good</option>
+            <option value="5">Excellent</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend>Which language do you believe I demonstrate the strongest proficiency in within my GitHub projects?</legend>
+          <label for="javascript">JavaScript
+            <input id="javascript" type="radio" name="strongest-lang" value="javascript" checked/>
+          </label>
+
+          <label for="python">Python
+            <input id="python" type="radio" name="strongest-lang" value="python"/>
+          </label>
+
+          <label for="java">Java
+            <input id="java" type="radio" name="strongest-lang" value="java"/>
+          </label>
+
+          <label for="c++">C++
+            <input id="c++" type="radio" name="strongest-lang" value="c++"/>
+          </label>
+
+          <label for="c">C
+            <input id="c" type="radio" name="strongest-lang" value="c"/>
+          </label>
+
+          <label for="sql">SQL
+            <input id="sql" type="radio" name="strongest-lang" value="sql"/>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Please identify the strengths of the portfolio by selecting the applicable areas:</legend>
+          <label for="front-end">
+            <input id="front-end" type="checkbox" value="front-end"/> Front-End Development
+          </label>
+
+          <label for="back-end">
+            <input id="back-end" type="checkbox" value="back-end"/> Back-End Development
+          </label>
+
+          <label for="ui/ux">
+            <input id="ui/ux" type="checkbox" value="ui/ux"/> UI/UX Design
+          </label>
+
+          <label for="organization">
+            <input id="organization" type="checkbox" value="organization"/> Code Organization and Readability
+          </label>
+
+          <label for="documentation">
+            <input id="documentation" type="checkbox" value="documentation"/> Project Documentation
+          </label>
+
+          <label for="problem-solving">
+            <input id="problem-solving" type="checkbox" value="problem-solving"/> Problem Solving
+          </label>
+
+          <label for="testing">
+            <input id="testing" type="checkbox" value="testing"/> Testing and Quality Assurance
+          </label>
+        </fieldset>
+
+        <label for="textbox">In your opinion, what specific improvements or additions could enhance the overall quality and effectiveness of my GitHub portfolio? Please share any suggestions or insights you may have.
+          <textarea id="textbox" name="textbox"></textarea>
+        </label>
+
+        <input id="submit" type="submit" value="Submit" />
+      </form>
+    </main>
+  </body>
+</html>
