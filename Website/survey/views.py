@@ -1,5 +1,5 @@
-import csv
 import os
+import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -16,34 +16,42 @@ def survey(request):
         strengths = request.POST.getlist('strengths')
         improvements = request.POST.get('textbox', '')
 
-        # CSV file path
-        csv_file_path = 'survey_responses.csv'
+        # Excel file path
+        excel_file_path = 'survey_responses.xlsx'
 
-        # Check if the CSV file already exists
-        file_exists = os.path.isfile(csv_file_path)
+        # Create a DataFrame with the survey response data
+        survey_data = pd.DataFrame({
+            'Full Name': [full_name],
+            'Email': [email],
+            'Age': [age],
+            'Clarity Rating': [clarity_rating],
+            'Strongest Language': [strongest_language],
+            'Front-End': ['Front-End' if 'front-end' in strengths else ''],
+            'Back-End': ['Back-End' if 'back-end' in strengths else ''],
+            'UI/UX': ['UI/UX' if 'ui/ux' in strengths else ''],
+            'Code Organization and Readability': ['Code Organization and Readability' if 'organization' in strengths else ''],
+            'Project Documentation': ['Project Documentation' if 'documentation' in strengths else ''],
+            'Problem Solving': ['Problem Solving' if 'problem-solving' in strengths else ''],
+            'Testing and Quality Assurance': ['Testing and Quality Assurance' if 'testing' in strengths else ''],
+            'Improvements': [improvements]
+        })
 
-        # Open the CSV file in append mode
-        with open(csv_file_path, 'a', newline='') as csv_file:
-            # Create a CSV writer object
-            csv_writer = csv.writer(csv_file)
+        # Check if the Excel file already exists
+        file_exists = os.path.isfile(excel_file_path)
 
-            # If the file doesn't exist, write the header row
-            if not file_exists:
-                csv_writer.writerow(['Full Name', 'Email', 'Age', 'Clarity Rating', 'Strongest Language',
-                                     'Front-End', 'Back-End', 'UI/UX', 'Code Organization and Readability',
-                                     'Project Documentation', 'Problem Solving', 'Testing and Quality Assurance', 'Improvements'])
+        # If the file doesn't exist, write the header row
+        if not file_exists:
+            survey_data.to_excel(excel_file_path, index=False, engine='openpyxl', sheet_name='Sheet1')
+        else:
+            # Read the existing Excel file
+            existing_data = pd.read_excel(excel_file_path, sheet_name='Sheet1')
+            
+            # Concatenate the existing data with the new data
+            updated_data = pd.concat([existing_data, survey_data], ignore_index=True)
+            
+            # Write the updated data back to the Excel file
+            updated_data.to_excel(excel_file_path, index=False, engine='openpyxl', sheet_name='Sheet1')
 
-            # Write the survey response data to the CSV file
-            csv_writer.writerow([full_name, email, age, clarity_rating, strongest_language,
-                                'Front-End' if 'front-end' in strengths else '',
-                                'Back-End' if 'back-end' in strengths else '',
-                                'UI/UX' if 'ui/ux' in strengths else '',
-                                'Code Organization and Readability' if 'organization' in strengths else '',
-                                'Project Documentation' if 'documentation' in strengths else '',
-                                'Problem Solving' if 'problem-solving' in strengths else '',
-                                'Testing and Quality Assurance' if 'testing' in strengths else '',
-                                improvements])
-
-        return HttpResponse('Form submitted successfully and data saved to CSV.')
+        return HttpResponse('Form submitted successfully and data saved to Excel.')
 
     return render(request, 'survey.html')
