@@ -3,6 +3,7 @@ import openpyxl
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from openpyxl.utils import get_column_letter
 
 @csrf_exempt
 def survey(request):
@@ -23,6 +24,7 @@ def survey(request):
         if not os.path.isfile(excel_file_path):
             workbook = openpyxl.Workbook()
             sheet = workbook.active
+            sheet.title = "Reviews"  # Set the sheet name to "Reviews"
             # Write header row
             header = ['Full Name', 'Email', 'Age', 'Clarity Rating', 'Strongest Language',
                       'Front-End', 'Back-End', 'UI/UX', 'Code Organization and Readability',
@@ -30,7 +32,12 @@ def survey(request):
             sheet.append(header)
         else:
             workbook = openpyxl.load_workbook(excel_file_path)
-            sheet = workbook.active
+            if 'Reviews' not in workbook.sheetnames:
+                workbook.create_sheet(title='Reviews')  # Create a new sheet with the name "Reviews"
+            sheet = workbook['Reviews']
+
+        # Split improvements into paragraphs with a maximum line length of 30 characters
+        improvements_paragraphs = [improvements[i:i+30] for i in range(0, len(improvements), 30)]
 
         # Add survey data to the worksheet
         survey_data = [full_name, email, age, clarity_rating, strongest_language,
@@ -40,13 +47,25 @@ def survey(request):
                        'Code Organization and Readability' if 'organization' in strengths else '',
                        'Project Documentation' if 'documentation' in strengths else '',
                        'Problem Solving' if 'problem-solving' in strengths else '',
-                       'Testing and Quality Assurance' if 'testing' in strengths else '',
-                       improvements]
+                       'Testing and Quality Assurance' if 'testing' in strengths else ''] + improvements_paragraphs
         sheet.append(survey_data)
 
-        # Save the workbook
+        # Iterate through each column and fit column width.
+        for col in sheet.columns:
+            max_length = 0
+            column = col[0].column  # Get the column name
+            for cell in col:
+                try:  # Necessary to avoid error on empty cells
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[get_column_letter(column)].width = adjusted_width
+
+        # Save the workbook after updating the cells
         workbook.save(excel_file_path)
 
         return HttpResponse('Form submitted successfully and data saved to Excel.')
-
+    
     return render(request, 'survey.html')
