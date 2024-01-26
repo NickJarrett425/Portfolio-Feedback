@@ -36,7 +36,7 @@ def survey(request):
             sheet = workbook['Reviews']
 
         # Add survey data to the worksheet
-        strengths_text = ', '.join([s.capitalize() for s in strengths])
+        strengths_text = ', '.join(strengths)
         survey_data = [full_name, email, age, clarity_rating, strongest_language,
                        strengths_text,
                        improvements]
