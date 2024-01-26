@@ -36,9 +36,6 @@ def survey(request):
                 workbook.create_sheet(title='Reviews')  # Create a new sheet with the name "Reviews"
             sheet = workbook['Reviews']
 
-        # Split improvements into paragraphs with a maximum line length of 30 characters
-        improvements_paragraphs = [improvements[i:i+30] for i in range(0, len(improvements), 30)]
-
         # Add survey data to the worksheet
         survey_data = [full_name, email, age, clarity_rating, strongest_language,
                        'Front-End' if 'front-end' in strengths else '',
