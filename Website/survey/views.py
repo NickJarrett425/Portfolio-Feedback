@@ -38,13 +38,14 @@ def survey(request):
 
         # Add survey data to the worksheet
         survey_data = [full_name, email, age, clarity_rating, strongest_language,
-                       'Front-End' if 'front-end' in strengths else '',
-                       'Back-End' if 'back-end' in strengths else '',
-                       'UI/UX' if 'ui/ux' in strengths else '',
-                       'Code Organization and Readability' if 'organization' in strengths else '',
-                       'Project Documentation' if 'documentation' in strengths else '',
-                       'Problem Solving' if 'problem-solving' in strengths else '',
-                       'Testing and Quality Assurance' if 'testing' in strengths else ''] + improvements_paragraphs
+                    'Front-End' if 'front-end' in strengths else '',
+                    'Back-End' if 'back-end' in strengths else '',
+                    'UI/UX' if 'ui/ux' in strengths else '',
+                    'Code Organization and Readability' if 'organization' in strengths else '',
+                    'Project Documentation' if 'documentation' in strengths else '',
+                    'Problem Solving' if 'problem-solving' in strengths else '',
+                    'Testing and Quality Assurance' if 'testing' in strengths else '',
+                    improvements]
         sheet.append(survey_data)
 
         # Iterate through each column and fit column width.
@@ -59,6 +60,7 @@ def survey(request):
                     pass
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[get_column_letter(column)].width = adjusted_width
+
 
         # Save the workbook after updating the cells
         workbook.save(excel_file_path)
