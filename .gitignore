@@ -3,7 +3,6 @@ __pychache__/
 *.pyc
 
 # Virtual Environment
-virt/
 venv/
 
 # Database

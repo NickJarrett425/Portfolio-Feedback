@@ -69,3 +69,11 @@ body {
   #submit:hover {
     background-color: #45a049;
   }
+
+  .nudgeUp {
+    transform: translateY(-1rem);
+  }
+
+  .nudgeDown {
+    transform: translateY(1.5rem);
+  }
