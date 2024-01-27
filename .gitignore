@@ -8,3 +8,6 @@ venv/
 # Database
 db.sqlite3
 *.xlsx
+
+# Environment Variable
+*.env

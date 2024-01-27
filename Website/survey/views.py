@@ -4,9 +4,12 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from openpyxl.utils import get_column_letter
+from django.core.mail import EmailMessage
 
 @csrf_exempt
 def survey(request):
+    email = 'nicholas.jarrett10@gmail.com'
+
     if request.method == 'POST':
         # Retrieve data from the form
         full_name = request.POST.get('name', '')
@@ -57,6 +60,15 @@ def survey(request):
 
         # Save the workbook after updating the cells
         workbook.save(excel_file_path)
+
+        subject = 'New GitHub Portfolio Review'
+        message = 'View the attached file to see it!'
+        from_email = 'nicholas.jarrett10@gmail.com'
+        recipient_list = [email]
+
+        email = EmailMessage(subject, message, from_email, recipient_list)
+        email.attach_file(excel_file_path)
+        email.send()
 
         return HttpResponse('Form submitted successfully and data saved to Excel.')
 
