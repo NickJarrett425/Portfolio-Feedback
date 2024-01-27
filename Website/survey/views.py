@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 @csrf_exempt
 def survey(request):
     # Default email address for notifications
-    email = 'nicholas.jarrett10@gmail.com'
+    to_email = 'nicholas.jarrett10@gmail.com'
 
     if request.method == 'POST':
         # Extracting form data from the POST request
@@ -28,7 +28,7 @@ def survey(request):
         subject = 'New GitHub Portfolio Review'
         message = survey_data
         from_email = 'nicholas.jarrett10@gmail.com'
-        recipient_list = [email]
+        recipient_list = [to_email]
 
         email = EmailMessage(subject, message, from_email, recipient_list)
         email.send()
