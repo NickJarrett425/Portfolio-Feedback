@@ -8,10 +8,11 @@ from django.core.mail import EmailMessage
 
 @csrf_exempt
 def survey(request):
+    # Default email address for notifications
     email = 'nicholas.jarrett10@gmail.com'
 
     if request.method == 'POST':
-        # Retrieve data from the form
+        # Extracting form data from the POST request
         full_name = request.POST.get('name', '')
         email = request.POST.get('email', '')
         age = request.POST.get('number', '')
@@ -20,37 +21,35 @@ def survey(request):
         strengths = request.POST.getlist('strengths')
         improvements = request.POST.get('textbox', '')
 
-        # Excel file path
+        # Excel file path for storing survey responses
         excel_file_path = 'survey_responses.xlsx'
 
-        # Create or load the workbook
+        # Creating or loading the workbook and sheet for survey responses
         if not os.path.isfile(excel_file_path):
             workbook = openpyxl.Workbook()
             sheet = workbook.active
-            sheet.title = "Reviews"  # Set the sheet name to "Reviews"
-            # Write header row
+            sheet.title = "Reviews"
             header = ['Full Name', 'Email', 'Age', 'Clarity Rating', 'Strongest Language',
                       'Strengths', 'Improvements']
             sheet.append(header)
         else:
             workbook = openpyxl.load_workbook(excel_file_path)
             if 'Reviews' not in workbook.sheetnames:
-                workbook.create_sheet(title='Reviews')  # Create a new sheet with the name "Reviews"
+                workbook.create_sheet(title='Reviews')
             sheet = workbook['Reviews']
 
-        # Add survey data to the worksheet
+        # Formatting and saving survey data to the Excel sheet.
         strengths_text = ', '.join(strengths)
         survey_data = [full_name, email, age, clarity_rating, strongest_language,
                        strengths_text,
                        improvements]
         sheet.append(survey_data)
 
-        # Iterate through each column and fit column width.
         for col in sheet.columns:
             max_length = 0
-            column = col[0].column  # Get the column name
+            column = col[0].column
             for cell in col:
-                try:  # Necessary to avoid error on empty cells
+                try: 
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -58,9 +57,9 @@ def survey(request):
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[get_column_letter(column)].width = adjusted_width
 
-        # Save the workbook after updating the cells
         workbook.save(excel_file_path)
 
+        # Sending an email notification with the attached Excel file
         subject = 'New GitHub Portfolio Review'
         message = 'View the attached file to see it!'
         from_email = 'nicholas.jarrett10@gmail.com'
@@ -70,6 +69,7 @@ def survey(request):
         email.attach_file(excel_file_path)
         email.send()
 
+        # Returning a success message.
         return HttpResponse('Form submitted successfully and data saved to Excel.')
 
     return render(request, 'survey.html')
