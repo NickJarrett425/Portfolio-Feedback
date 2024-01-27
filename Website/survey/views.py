@@ -72,4 +72,5 @@ def survey(request):
         # Returning a success message.
         return HttpResponse('Form submitted successfully and data saved to Excel.')
 
+    # Rendering the survey form template. 
     return render(request, 'survey.html')
