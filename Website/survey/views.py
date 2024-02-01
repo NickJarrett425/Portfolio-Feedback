@@ -34,7 +34,7 @@ def survey(request):
         email.send()
 
         # Returning a success message.
-        return HttpResponse('Form submitted successfully. Data sent via email.')
+        return render(request, 'success.html')
 
     # Rendering the survey form template.
     return render(request, 'survey.html')
